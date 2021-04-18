@@ -1,6 +1,16 @@
 var canvas = document.getElementById("canvas");
 
+let previosState
+
+let poitIsDown = false
+
 let canvasLayout
+
+document.getElementById('image-input').addEventListener(
+    'change',
+    setCanvasLayout,
+    true
+)
 
 //__constants___________________
 const WIDTH = 800
@@ -15,35 +25,63 @@ function setCanvasLayout (e) {
     render(canvas)
 }
 
-function mouseMoveHandler (e) {
-    console.log(e)
+function clear (context) {
+    if(canvasLayout){
+        context.clearRect(0,0,canvasLayout.width,canvasLayout.height)
+    }
 }
 
-canvas.addEventListener(
-    'mousemove', 
-    mouseMoveHandler,
-    true
-)
+function mouseMoveHandler (e, context, rivet) {
+    if(poitIsDown){
+      clear(context)
+      defineLayout(canvas, context)
+      context.beginPath();
+      context.moveTo(rivet.x, rivet.y)
+      context.lineTo(e.offsetX, e.offsetY)
+      context.stroke();
+      context.closePath()
+    }
+}
 
-document.getElementById('image-input').addEventListener(
-    'change',
-    setCanvasLayout,
-    true
-)
+function mouseDownHandler (e, context, rivet) {
+    rivet.x = e.offsetX
+    rivet.y = e.offsetY
+    poitIsDown = true
+}
+
+function mouseUpHandler (e, context) {
+    poitIsDown = false
+}
+
+function defineLayout (HTMLcanvas, context) {
+    HTMLcanvas.width = canvasLayout.width
+    HTMLcanvas.height = canvasLayout.height
+    context.drawImage(canvasLayout,10,10);
+}
 
 function render (HTMLcanvas) {
-    context = HTMLcanvas.getContext("2d");
-    console.log(canvasLayout)
-    HTMLcanvas.style.width = `100%`
-    HTMLcanvas.style.height = `100%`
+    const context = HTMLcanvas.getContext("2d");
+    let rivet = {x: null, y: null}
     if(canvasLayout){
-        canvasLayout.onload = function() {
-            console.log(canvasLayout.width)
-            HTMLcanvas.width = canvasLayout.width
-            HTMLcanvas.height = canvasLayout.height
-            context.drawImage(canvasLayout,10,10);
-        };
+        canvasLayout.onload = () => defineLayout(HTMLcanvas, context)
     }
+    HTMLcanvas.addEventListener(
+        'mousedown', 
+        (e) => mouseDownHandler(e, context, rivet),
+        true
+    )
+
+    HTMLcanvas.addEventListener(
+        'mousemove', 
+        (e) => mouseMoveHandler(e, context, rivet),
+        true
+    )
+
+    HTMLcanvas.addEventListener(
+        'mouseup',
+        (e) => mouseUpHandler(e, context),
+        true
+    )
 }
 
 render(canvas)
