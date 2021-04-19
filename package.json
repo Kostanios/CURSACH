@@ -5,7 +5,9 @@
   "main": "index.js",
   "scripts": {
     "dev": "nodemon index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "server": "parcel ./public/index.html -p 5500",
+    "build": "parcel build ./public/index.html"
   },
   "author": "Kostanios",
   "license": "ISC",
@@ -14,5 +16,8 @@
     "moment": "^2.29.1",
     "nodemon": "^2.0.7",
     "uuid": "^8.3.2"
+  },
+  "devDependencies": {
+    "parcel-bundler": "^1.12.5"
   }
 }

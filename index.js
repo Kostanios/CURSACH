@@ -15,7 +15,7 @@ app.use(logger)
 
 
 
-app.use(express.static(path.join(__dirname, 'public'))) // static
+app.use(express.static(path.join(__dirname, 'dist'))) // static
 
 app.use('/api/members', require('./src/routes/api/members'))
 

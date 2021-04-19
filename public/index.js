@@ -1,10 +1,15 @@
-var canvas = document.getElementById("canvas");
+import calculatePath from './src/util/calculatePath';
 
-let previosState
+var canvas = document.getElementById("canvas");
+const context = canvas.getContext("2d");
 
 let poitIsDown = false
 
 let canvasLayout
+
+let addEventLiseners = []
+
+const rivet = {x: null, y: null}
 
 document.getElementById('image-input').addEventListener(
     'change',
@@ -18,23 +23,23 @@ const HEIGHT = 800
 const DPI_WIDTH = WIDTH * 2
 const DPI_HEIGHT = HEIGHT *2
 //______________________________
+
 function setCanvasLayout (e) {
     let image = new Image()
     image.src = window.URL.createObjectURL(e.target.files[0])
     canvasLayout = image
-    render(canvas)
+    render()
 }
 
-function clear (context) {
+function clear () {
     if(canvasLayout){
         context.clearRect(0,0,canvasLayout.width,canvasLayout.height)
     }
 }
 
-function mouseMoveHandler (e, context, rivet) {
+function mouseMoveHandler (e) {
     if(poitIsDown){
-      clear(context)
-      defineLayout(canvas, context)
+      render()
       context.beginPath();
       context.moveTo(rivet.x, rivet.y)
       context.lineTo(e.offsetX, e.offsetY)
@@ -43,45 +48,49 @@ function mouseMoveHandler (e, context, rivet) {
     }
 }
 
-function mouseDownHandler (e, context, rivet) {
+function mouseDownHandler (e) {
     rivet.x = e.offsetX
     rivet.y = e.offsetY
     poitIsDown = true
 }
 
-function mouseUpHandler (e, context) {
+function mouseUpHandler (e) {
+    console.log( calculatePath( rivet, { x: e.offsetX, y: e.offsetY } ) )
     poitIsDown = false
 }
 
-function defineLayout (HTMLcanvas, context) {
-    HTMLcanvas.width = canvasLayout.width
-    HTMLcanvas.height = canvasLayout.height
+function defineLayout () {
+    canvas.width = canvasLayout.width
+    canvas.height = canvasLayout.height
     context.drawImage(canvasLayout,10,10);
 }
 
-function render (HTMLcanvas) {
-    const context = HTMLcanvas.getContext("2d");
-    let rivet = {x: null, y: null}
+canvas.addEventListener(
+    'mousedown', 
+    (e) => mouseDownHandler(e),
+    true
+)
+
+canvas.addEventListener(
+    'mousemove', 
+    (e) => mouseMoveHandler(e),
+    true
+)
+
+canvas.addEventListener(
+    'mouseup',
+    (e) => mouseUpHandler(e),
+    true
+)
+
+function render () {
+    clear()
     if(canvasLayout){
-        canvasLayout.onload = () => defineLayout(HTMLcanvas, context)
+        canvasLayout.onload = () => defineLayout()
+        defineLayout()
     }
-    HTMLcanvas.addEventListener(
-        'mousedown', 
-        (e) => mouseDownHandler(e, context, rivet),
-        true
-    )
-
-    HTMLcanvas.addEventListener(
-        'mousemove', 
-        (e) => mouseMoveHandler(e, context, rivet),
-        true
-    )
-
-    HTMLcanvas.addEventListener(
-        'mouseup',
-        (e) => mouseUpHandler(e, context),
-        true
-    )
 }
 
-render(canvas)
+
+
+render()
