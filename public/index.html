@@ -8,7 +8,13 @@
     <title>Kotov</title>
 </head>
 <body>
-    <header><input id="image-input" name="myFile" accept="image/png, image/jpeg" type="file"></header>
+    <header>
+        <form>
+            <input id="image-input" name="myFile" accept="image/png, image/jpeg" type="file">
+            <input id="focus-length" name="focus" type="number" placeholder="введите фокусное мм">
+        </form>
+        <div>Расстояние до объекта-<span id="result"></span></div>
+    </header>
     <div>
         <div>
             <canvas id="canvas"></canvas>

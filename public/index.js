@@ -1,13 +1,17 @@
 import calculatePath from './src/util/calculatePath';
+import pixelToMillimeters from './src/util/pixelToMillimeters.js';
+import calculateDistanceToObject from './src/util/calculateDistanceToObject.js';
 
 var canvas = document.getElementById("canvas");
+var focusInput = document.getElementById("focus-length")
+
 const context = canvas.getContext("2d");
 
 let poitIsDown = false
 
 let canvasLayout
 
-let addEventLiseners = []
+let imageWidth
 
 const rivet = {x: null, y: null}
 
@@ -55,6 +59,7 @@ function mouseDownHandler (e) {
 }
 
 function mouseUpHandler (e) {
+    imageWidth = calculatePath( rivet, { x: e.offsetX, y: e.offsetY } )
     console.log( calculatePath( rivet, { x: e.offsetX, y: e.offsetY } ) )
     poitIsDown = false
 }
@@ -64,6 +69,17 @@ function defineLayout () {
     canvas.height = canvasLayout.height
     context.drawImage(canvasLayout,10,10);
 }
+
+function showRealLength (pxLength, focusLength) {
+    document.getElementById("result").innerHTML = calculateDistanceToObject(pixelToMillimeters(pxLength), 1000, focusLength)
+}
+
+focusInput.addEventListener(
+    'change',
+    (e) => {
+        showRealLength(imageWidth, e.target.value)
+    }
+)
 
 canvas.addEventListener(
     'mousedown', 
