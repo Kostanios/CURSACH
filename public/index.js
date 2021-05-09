@@ -1,6 +1,9 @@
 import calculatePath from './src/util/calculatePath';
 import pixelToMillimeters from './src/util/pixelToMillimeters.js';
 import calculateDistanceToObject from './src/util/calculateDistanceToObject.js';
+import { mouseMoveHandler } from './src/contextHandlers/MouseMoveHandler'
+import { mouseDownHandler } from './src/contextHandlers/MouseDownHandler'
+import { mouseUpHandler } from './src/contextHandlers/MouseUpHandler'
 
 var canvas = document.getElementById("canvas");
 var focusInput = document.getElementById("focus-length")
@@ -12,6 +15,7 @@ let poitIsDown = false
 let canvasLayout
 
 let imageWidth
+
 
 const rivet = {x: null, y: null}
 
@@ -41,29 +45,6 @@ function clear () {
     }
 }
 
-function mouseMoveHandler (e) {
-    if(poitIsDown){
-      render()
-      context.beginPath();
-      context.moveTo(rivet.x, rivet.y)
-      context.lineTo(e.offsetX, e.offsetY)
-      context.stroke();
-      context.closePath()
-    }
-}
-
-function mouseDownHandler (e) {
-    rivet.x = e.offsetX
-    rivet.y = e.offsetY
-    poitIsDown = true
-}
-
-function mouseUpHandler (e) {
-    imageWidth = calculatePath( rivet, { x: e.offsetX, y: e.offsetY } )
-    console.log( calculatePath( rivet, { x: e.offsetX, y: e.offsetY } ) )
-    poitIsDown = false
-}
-
 function defineLayout () {
     canvas.width = canvasLayout.width
     canvas.height = canvasLayout.height
@@ -83,19 +64,19 @@ focusInput.addEventListener(
 
 canvas.addEventListener(
     'mousedown', 
-    (e) => mouseDownHandler(e),
+    (e) => mouseDownHandler(e, poitIsDown, rivet),
     true
 )
 
 canvas.addEventListener(
     'mousemove', 
-    (e) => mouseMoveHandler(e),
+    (e) => mouseMoveHandler(e, context, poitIsDown, render, rivet),
     true
 )
 
 canvas.addEventListener(
     'mouseup',
-    (e) => mouseUpHandler(e),
+    (e) => mouseUpHandler(e, calculatePath, imageWidth, rivet, poitIsDown),
     true
 )
 
