@@ -11,7 +11,9 @@
     <header>
         <form>
             <input id="image-input" name="myFile" accept="image/png, image/jpeg" type="file">
-            <input id="focus-length" name="focus" type="number" placeholder="введите фокусное мм">
+            <span>фокус<input id="focus-length" name="focus" type="number" placeholder="введите фокусное мм" value="5"></span>
+            <span>длинна объекта</sapn><input id="obj-length" name="length" type="number" placeholder="введите длинну объекта" value="1000"></span>
+            <span>размер пикселя<input id="pixel-size" nmae="pixel" type="number" placeholder="размер пикселя" value="0.1"></span>
         </form>
         <div>Расстояние до объекта-<span id="result"></span></div>
     </header>

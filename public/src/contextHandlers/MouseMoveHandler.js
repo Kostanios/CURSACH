@@ -1,5 +1,5 @@
-export function mouseMoveHandler (e, context, poitIsDown, render, rivet) {
-    if(poitIsDown){
+export function mouseMoveHandler (e, context, render, rivet) {
+    if(rivet.poitIsDown){
       render()
       context.beginPath();
       context.moveTo(rivet.x, rivet.y)

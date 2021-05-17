@@ -1,5 +1,5 @@
-export function mouseDownHandler (e, poitIsDown, rivet) {
+export function mouseDownHandler (e, rivet) {
     rivet.x = e.offsetX
     rivet.y = e.offsetY
-    poitIsDown = true
+    rivet.poitIsDown = true
 }
